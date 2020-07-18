@@ -5,8 +5,8 @@
 	<?php include 'link/links.php'; ?>
 	<?php include 'css/style.php'; ?>
 </head>
-<body>
-<!-- Nav Bar Start -->
+<body onload="fetch()">
+<!-- Nav Bar Stat -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light p-3 nav_style">
   <a class="navbar-brand pl-5" href="#">COVID-19</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -14,24 +14,30 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav ml-auto pr-5 text-capitalize">
+   <ul class="navbar-nav ml-auto pr-5 text-capitalize">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#aboutid">About</a>
+        <a class="nav-link" href="index.php#aboutid">About</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#sympid">Symptoms</a>
+        <a class="nav-link" href="index.php#sympid">Symptoms</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#preventid">Privenstions</a>
+        <a class="nav-link" href="index.php#preventid">Privenstions</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#contactid">Contact</a>
+        <a class="nav-link" href="indiadaywisereport.php">indiaDaywise</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="indiacoronalive.php">indiacoronalive</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="index.php#contactid">Contact</a>
       </li>
       
-    </ul>
+    </ul>s
     
   </div>
 </nav>
@@ -55,29 +61,26 @@
 </div>
 
 <!-- CORONA Letest Update-->
-<section class="corona_update">
+<section class="corona_update container-fluid">
 	<div class="mb-3">
 		<h3 class="text-uppercase text-center"> Covid-19 Updates</h3>
 	</div>
 
-	<div class="d-flex justify-content-around align-items-center count_style">
-		<div>
-			<h1 class="count">12345</h1>
-			<p>Passengers Screened at Airport</p>
-		</div>
-		<div>
-			<h1 class="count">12345</h1>
-			<p>Active COVID-19 cases*</p>
-		</div>
-		<div>
-			<h1 class="count">12345</h1>
-			<p>Passengers Screened at Airport</p>
-		</div><div>
-			<h1 class="count">12345</h1>
-			<p>Passengers Screened at Airport</p>
-		</div>
-		
+	<div class="table-responsive">
+		<table class=" table table-bordered table-striped text-center" id="tbval">
+			<tr>
+				<th>Country</th>
+				<th>Total Confirmed</th>
+				<th>Total Recovered</th>
+				<th>Total Deaths</th>
+				<th>NewConfirmed</th>
+				<th>New Recovered</th>
+				<th>New Deaths</th>
+				<th>Sr No.</th>
+			</tr>
+		</table>
 	</div>
+
 </section>
 
 <!-- About Section-->
@@ -295,10 +298,10 @@
 </footer>
 <script type="text/javascript">
 
-	$('.count').counterUp({
-		delay:10,
-		time:3000
-	})
+	// $('.count').counterup({
+	// 	delay:10,
+	// 	time:3000
+	// })
 
 
 	mybutton =document.getElementById("myBtn");
@@ -316,6 +319,57 @@
 		document.body.scrollTop = 0;
 		document.documentElement.scrollTop = 0;
 	}
+
+// Get Data fro API
+
+function fetch(){
+	$.get("https://api.covid19api.com/summary",
+		function (data){
+			// console.log(data['Countries'].length);
+			var tbval = document.getElementById("tbval");
+
+			for (var i = 1;  i<(data['Countries'].length); i++) {
+
+				var x = tbval.insertRow();
+				x.insertCell(0);
+				tbval.rows[i].cells[0].innerHTML = data['Countries'][i-1]['Country'];
+				tbval.rows[i].cells[0].style.background = '#7a4a91';
+				tbval.rows[i].cells[0].style.color = '#fff';
+
+				x.insertCell(1);
+				tbval.rows[i].cells[1].innerHTML = data['Countries'][i-1]['TotalConfirmed'];
+				tbval.rows[i].cells[1].style.background = '#4bb7da';
+
+				x.insertCell(2);
+				tbval.rows[i].cells[2].innerHTML = data['Countries'][i-1]['TotalRecovered'];
+				tbval.rows[i].cells[2].style.background = '#4bb7da';
+
+				x.insertCell(3);
+				tbval.rows[i].cells[3].innerHTML = data['Countries'][i-1]['TotalDeaths'];
+				tbval.rows[i].cells[3].style.background = '#4bb7da';
+
+				x.insertCell(4);
+				tbval.rows[i].cells[4].innerHTML = data['Countries'][i-1]['NewConfirmed'];
+				tbval.rows[i].cells[4].style.background = '#4bb7da';
+				
+				x.insertCell(5);
+				tbval.rows[i].cells[5].innerHTML = data['Countries'][i-1]['NewRecovered'];
+				tbval.rows[i].cells[5].style.background = '#4bb7da';
+				
+				x.insertCell(6);
+				tbval.rows[i].cells[6].innerHTML = data['Countries'][i-1]['NewDeaths'];
+				tbval.rows[i].cells[6].style.background = '#4bb7da';
+
+				x.insertCell(7);
+				tbval.rows[i].cells[7].innerHTML = [i-1];
+				tbval.rows[i].cells[7].style.background = '#4bb7da';
+
+			}
+		}
+	);
+}
+
+
 </script>
 
 
